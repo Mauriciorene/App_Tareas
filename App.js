@@ -12,7 +12,7 @@ export default function App() {
     if (tarea.trim() !== '') {
       setListaTareas((prevTareas) => [
         ...prevTareas,
-        { id: uuid.v4(), texto: tarea },
+        { id: uuid.v4(), texto: tarea, completada: false }, // Añadimos completada: false
       ]);
       setTarea(''); // Limpiar el campo de texto después de agregar
     }
@@ -21,6 +21,15 @@ export default function App() {
   // Función para eliminar una tarea por su ID
   const eliminarTarea = (id) => {
     setListaTareas((prevTareas) => prevTareas.filter((tarea) => tarea.id !== id));
+  };
+
+  // Función para marcar una tarea como completada o desmarcarla
+  const completarTarea = (id) => {
+    setListaTareas((prevTareas) =>
+      prevTareas.map((tarea) =>
+        tarea.id === id ? { ...tarea, completada: !tarea.completada } : tarea
+      )
+    );
   };
 
   return (
@@ -40,7 +49,11 @@ export default function App() {
       <FlatList
         data={listaTareas}
         renderItem={({ item }) => (
-          <Tareas tarea={item} eliminarTarea={eliminarTarea} />
+          <Tareas
+            tarea={item}
+            eliminarTarea={eliminarTarea}
+            completarTarea={completarTarea}
+          />
         )}
         keyExtractor={(item) => item.id.toString()}
       />
@@ -77,4 +90,3 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
-
